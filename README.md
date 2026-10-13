@@ -1,271 +1,55 @@
-# Genesis
+# wgpt community
 
-A starter template for projects that want reusable quality checks and clear
-GitHub issue and pull request submissions. Each repository owns its contribution
-rules, toolchain choices, and review process; customize these defaults to fit.
+**The public entry point for contributing to wgpt.** This repository hosts the contribution agreement, contributor onboarding and their automation. Development of wgpt takes place in the private [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) repository after an invitation is accepted.
 
-## What this template provides
+**wgpt 的公开贡献入口。** 本仓库维护贡献者协议、贡献者接入及其自动化。接受邀请后，在私有仓库 [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) 中开发 wgpt。
 
-- Repository quality checks managed with `pre-commit`
-- Formatting and linting defaults for common project assets
-- Five issue forms for bugs, features, documentation, maintenance, and questions
-- A pull request template with changelog entries, test evidence, and migration notes
-- Baseline ignore rules and repository metadata
+wgpt's mission is to make website-based AI a dependable collaborator for coding agents and SDK applications through a local, recoverable bridge. This public repository does not mirror its private source, releases, issues, account data or client transcripts. Do not copy private repository contents into a public issue, pull request or fork.
 
-## Included tooling
+wgpt 的使命是通过可恢复的本地 bridge，让网页端 AI 成为编程 agent 和 SDK 应用可靠的协作者。本公开仓库不镜像私有源码、发布产物、issue、账号数据或客户端会话。不要将私有仓库内容复制到公开 issue、PR 或 fork。
 
-Enable only the toolchains your project needs. The supplied configuration covers:
+## Join the project / 参与项目
 
-- C/C++ formatting and linting
-- Python formatting and linting
-- Rust formatting and static checks
-- Dockerfile linting
-- CMake formatting
-- Makefile linting
-- YAML validation and general repository hygiene checks
-- Conventional commit message validation
+1. Read [CONTRIBUTING](CONTRIBUTING.md), the current [CLA](CLA.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Quick start
+   阅读[贡献指南](CONTRIBUTING.md)、当前 [CLA](CLA.md) 和[行为准则](CODE_OF_CONDUCT.md)。
 
-1. Use this repository as a template and clone the generated repository.
-2. Customize `.pre-commit-config.yaml` for your languages and install the
-   prerequisites required by the enabled hooks.
-3. Install `pre-commit` and both types of repository hooks:
+2. Fork this public repository. Add `contributors/<your-github-login>.md` with your GitHub handle and a short, non-sensitive statement of your contribution interests, then open a pull request against `main`.
 
-   ```bash
-   python -m pip install pre-commit
-   pre-commit install --hook-type pre-commit --hook-type commit-msg
-   ```
+   Fork 本公开仓库，新增 `contributors/<你的 GitHub 用户名>.md`，填写 GitHub 用户名和简短、不敏感的贡献意向，再向 `main` 提交 PR。
 
-4. Run the repository checks:
+3. The CLA bot posts the exact signing statement for the current agreement version and SHA-256. If you agree, copy that whole statement into a **new comment authored by you on your PR**. A checkbox, commit signature or another person's comment is not a CLA signature.
 
-   ```bash
-   pre-commit run --all-files
-   ```
+   CLA bot 会发布包含当前协议版本及 SHA-256 的准确签署声明。若你同意，将整段声明复制为**由你本人在自己的 PR 下新发的一条评论**。勾选框、commit 签名或他人评论均不能代替 CLA 签署。
 
-5. Add project code, build/test commands, and contribution documentation.
-   Conventional commit messages are checked by the supplied commit-msg hook;
-   adjust that configuration if your project uses a different convention.
+4. Once the signature is valid, the invitation reconciler can invite you to the private repository. Accept GitHub's invitation, then create development branches and pull requests there. The onboarding PR does not need to merge before the invitation is sent.
 
-## Submitting an issue
+   签署有效后，邀请同步任务即可邀请你加入私有仓库。接受 GitHub 邀请后，在该私有仓库中建立开发分支并提交 PR。邀请发送前不要求合入接入 PR。
 
-Search existing issues and read the project's contribution or support guidance
-first. Choose the form that matches the work:
+The private repository belongs to a personal account: collaborators receive **read/write access, not read-only or administrator access**. Any eligible signer is invited automatically; signing is not a request for a separate manual selection. The reconciler is scheduled every 20 minutes, but GitHub can delay or disable scheduled runs. See [permissions, configuration and recovery](CONTRIBUTING.md#maintainer-operations--维护者操作).
 
-| Form | Use it for | Include |
-| --- | --- | --- |
-| [Bug report](.github/ISSUE_TEMPLATE/bug-report.yml) | Incorrect or unexpected behavior | Minimal reproduction, exact version/environment, expected and actual results |
-| [Feature request](.github/ISSUE_TEMPLATE/feature-request.yml) | A new capability or behavior change | User problem, proposed scope, observable acceptance criteria, alternatives |
-| [Documentation](.github/ISSUE_TEMPLATE/documentation.yml) | Missing, incorrect, or confusing docs | Page/path and version, current problem, proposed correction, completion criteria |
-| [Maintenance](.github/ISSUE_TEMPLATE/maintenance.yml) | Refactoring, dependencies, CI, or performance work | Evidence, scope, compatibility risks, measurable completion criteria |
-| [Question](.github/ISSUE_TEMPLATE/question.yml) | Usage help or a request that does not fit another form | Goal, specific question, what you tried, relevant environment |
+私有仓库属于个人账号：协作者获得**读写权限，而非只读或管理员权限**。满足条件的签署者会被自动邀请；签署不代表再等待另一次人工筛选。邀请同步任务计划每 20 分钟执行一次，但 GitHub 可能延迟或停用定时运行。详见[权限、配置及恢复说明](CONTRIBUTING.md#maintainer-operations--维护者操作)。
 
-For a reproducible bug report:
+## Public records and withdrawal / 公开记录与撤回
 
-1. Reduce the problem to the smallest input, configuration, or example that
-   still fails. Attach it or provide an accessible link when possible.
-2. Include setup steps and exact commands or UI actions, in order.
-3. Separate expected behavior from actual output and include the full relevant
-   error text. Note how often it happens and the last working version if known.
-4. Record the project version or commit, installation method, OS, and relevant
-   runtime/dependency versions. A branch name alone is not a stable version.
-5. Remove secrets and personal data from logs and examples. Report security
-   vulnerabilities through the project's private security reporting channel,
-   not a public issue.
+Signatures are recorded on the [`cla-signatures` branch](https://github.com/DapengFeng/wgpt-community/tree/cla-signatures) with GitHub identities, comment references and agreement version/hash. Do not supply email addresses, identity documents, passwords or tokens. Editing or deleting a signing comment invalidates that signature; it stops eligibility for new automatic invitations and causes the CLA check to fail until a valid signature is supplied. Already accepted repository access is not automatically removed. [CONTRIBUTING](CONTRIBUTING.md#signature-records-and-withdrawal--签署记录与撤回) explains retention and access changes.
 
-Form placeholders are examples, not prefilled answers. Required fields request
-only the information needed to investigate or assess the proposal. Blank issues
-are disabled by default; the question form provides a general entry point.
+签署信息记录在 [`cla-signatures` 分支](https://github.com/DapengFeng/wgpt-community/tree/cla-signatures)，包含 GitHub 身份、评论引用及协议版本/哈希。不要提交邮箱、身份证件、密码或令牌。编辑或删除签署评论会使该签署失效，停止新的自动邀请资格，并使 CLA 检查失败，直到补充有效签署。已经接受的仓库权限不会自动移除。[贡献指南](CONTRIBUTING.md#signature-records-and-withdrawal--签署记录与撤回)说明记录保留及权限变更方式。
 
-## Submitting a pull request
+## Development and verification / 开发与验证
 
-Use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) and follow the
-project's own contribution requirements:
+This repository's automation uses Python's standard library. Run its offline synthetic tests from this repository root:
 
-- Explain the problem, resulting behavior, and scope. Link related issues;
-  use `Closes #123` only when the PR fully resolves the issue.
-- Write short changelog entries under applicable categories: **Added**,
-  **Changed**, **Fixed**, **Deprecated**, **Removed**, or **Security**.
-  Use **Internal** for changes with no user-facing impact. Update the project's
-  changelog or release-note files if it maintains them.
-- Record the exact commands, environment, and results of automated checks, or
-  reproducible manual checks. Explain skipped/failed checks and limitations.
-  For this repository, run `pre-commit run --all-files` before requesting review.
-- Attach screenshots or logs when useful. Explain breaking changes, migration
-  steps, risks, and rollback requirements.
-- Fill every section; use `None` or `Not applicable` with a reason when needed.
-  Check review items only after verifying them.
-- Replace every `{{PLACEHOLDER}}` in the PR template. The existing GitHub Actions
-  workflow reports uppercase template tokens in new or edited issue/PR titles
-  and bodies, excluding HTML comments. This check does not assess whether a
-  submission is complete or correct.
-
-Automated pre-commit update PRs use the same sections and explicitly record
-which checks were not run.
-
-## Example structured submissions
-
-These illustrative examples show the expected level of detail. Commands and
-results must be replaced with evidence from the actual change.
-
-### Bug report example
-
-````md
-## Context / Background
-
-- Goal: install both repository hooks using the quick-start instructions
-- Impact: ordinary formatting and lint checks do not run on commit
-
-## Reproduction Steps
-
-1. Clone a fresh copy of the repository with no existing local hooks.
-2. Install pre-commit with `python -m pip install pre-commit`.
-3. Run the old documented command: `pre-commit install -t commit-msg`.
-4. Check which hooks exist:
-
-   ```bash
-   test -f .git/hooks/commit-msg && echo 'commit-msg installed'
-   test -f .git/hooks/pre-commit || echo 'pre-commit missing'
-   ```
-
-## Expected Behavior
-
-The documented setup installs both pre-commit and commit-msg hooks.
-
-## Actual Behavior
-
-Only commit-msg is installed. Reproduces on every fresh clone.
-
-## Environment
-
-- Project commit: ffa8b7b
-- Installation: fresh Git clone, no custom core.hooksPath
-- OS: Ubuntu 24.04
-- Runtime / tools: Python 3.12, pre-commit 3.6.2, Git 2.43.0
-
-## Screenshots / Logs
-
-```text
-commit-msg installed
-pre-commit missing
-```
-````
-
-### Feature request example
-
-````md
-## Context / Background
-
-Contributors have questions about setup that are neither bugs nor new features.
-
-## Problem Statement
-
-Blank issues are disabled and no usage-question form is available.
-
-## Proposed Change
-
-- Add a question form asking for the goal, question, and previous attempts.
-- Keep environment details optional when they do not affect the answer.
-- Leave external support destinations to each project's maintainers.
-
-## Acceptance Criteria
-
-- [ ] The issue chooser offers a Question entry.
-- [ ] The form asks for a specific question and what the contributor tried.
-- [ ] Existing bug and feature forms remain available.
-
-## Alternatives Considered
-
-- Enable blank issues: easier to submit, but likely to omit useful context.
-- Use Discussions: suitable for projects that have enabled that feature.
-````
-
-### Pull request example
-
-````md
-## Summary of Changes
-
-- Fix quick-start setup so both formatting checks and commit-message checks
-  are installed locally.
-
-## Related Issue
-
-No linked issue; this corrects the documented hook installation command.
-
-## Changelog
-
-- Fixed: quick-start instructions now install both repository hooks.
-
-## Testing Evidence
-
-### Commands
+本仓库自动化使用 Python 标准库。在本仓库根目录执行离线合成测试：
 
 ```bash
-pre-commit install --hook-type pre-commit --hook-type commit-msg
-test -f .git/hooks/pre-commit && test -f .git/hooks/commit-msg
-pre-commit run --all-files
+python3 -m unittest discover -s tests
 ```
 
-### Results
+Offline tests do not prove that GitHub permissions, an external contributor's signature, the invitation and its acceptance work together. Hosted end-to-end acceptance remains open until a real external-account run is recorded. Maintainers should follow the [deployment and acceptance procedure](CONTRIBUTING.md#deployment-and-acceptance--部署与验收), rather than treating a passing local test as deployment evidence.
 
-```text
-Environment: Ubuntu 24.04, Python 3.12, pre-commit 3.6.2; fresh Git clone.
-Both hook files exist (exit 0).
-Applicable pre-commit checks passed; hooks without matching files were skipped.
-```
+离线测试不能证明 GitHub 权限、外部贡献者签署、邀请及接受邀请的完整链路有效。完成并记录真实外部账号测试前，托管端到端验收仍未完成。维护者应遵循[部署与验收流程](CONTRIBUTING.md#deployment-and-acceptance--部署与验收)，不能将本地测试通过当作部署证据。
 
-## Screenshots or Logs
+This repository's own material is provided under the [MIT license](LICENSE). The [CLA](CLA.md) defines the contribution agreement; it does not grant rights to third-party services, accounts, content or trademarks.
 
-Not applicable: this changes a documented shell command, with results above.
-
-## Breaking Changes
-
-- [x] No breaking changes
-- [ ] Breaking changes described below
-
-None. No application behavior or public interface changes.
-
-## Risks and Rollback
-
-The setup command installs checks that may modify files during future commits.
-No deployment is needed. Revert the documentation change to restore prior text;
-existing local hook installations are unaffected by reverting documentation.
-
-## Human Review Checklist
-
-- [x] I followed the project's applicable contribution guidelines
-- [x] The changes are limited to the stated problem
-- [x] The issue, motivation, and acceptance criteria are reflected in this PR
-- [x] Test commands and results, or manual verification and limitations, are recorded
-- [x] Documentation and changelog / release notes are updated where applicable
-- [x] Breaking changes, migration steps, risks, and rollback are documented where applicable
-- [x] Logs, screenshots, and examples contain no secrets or personal data
-````
-
-## Customizing for your project
-
-**Note for coding agents:** When adapting this template, rewrite this README
-for the actual repository and project. Verify its purpose, features, structure,
-setup, usage, and test commands against the code and existing documentation.
-Replace generic template content with project-specific information and follow
-the project's own conventions.
-
-- Replace the generic README with project documentation and, if useful, a
-  `CONTRIBUTING.md` describing project-specific setup, tests, and review rules.
-- Adapt form fields, required information, labels, and PR sections to your
-  project's workflow. Create any labels referenced by issue forms.
-- Change `.github/ISSUE_TEMPLATE/config.yml` to allow blank issues or add
-  `contact_links` for your actual support, discussion, or security destinations.
-- Configure a private security reporting channel and document it in your
-  project's security policy.
-- Add or remove toolchains in `.pre-commit-config.yaml` and extend `.gitignore`.
-- Add build, test, and release workflows appropriate to your stack.
-- Configure `PRE_COMMIT_PAT` if using the supplied quarterly pre-commit update
-  workflow, or replace that workflow with your preferred dependency updater.
-- Adapt or remove the placeholder validation workflow if your project needs to
-  discuss literal template tokens in issue or PR content.
-- Add any automation-specific instructions according to your own project's
-  conventions; this starter does not prescribe them.
-
-The forms use GitHub's [issue form syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms)
-and [form field schema](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema).
+本仓库自身材料采用 [MIT 许可证](LICENSE)。[CLA](CLA.md)规定贡献协议，不授予第三方服务、账号、内容或商标的权利。

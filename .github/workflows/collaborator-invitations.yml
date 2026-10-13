@@ -1,0 +1,37 @@
+name: Collaborator invitations
+
+on:
+  schedule:
+    - cron: '13,33,53 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: collaborator-invitations
+  cancel-in-progress: false
+
+jobs:
+  invite:
+    if: >-
+      github.repository_id == '1416356927' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: collaborator-invitations
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+      - name: Verify the signature and invitation contracts
+        run: python3 -m unittest discover -s tests
+      - name: Reconcile valid signatures and invitations
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          WGPT_COLLABORATOR_TOKEN: ${{ secrets.WGPT_COLLABORATOR_TOKEN }}
+        run: python3 scripts/invite_collaborators.py --apply

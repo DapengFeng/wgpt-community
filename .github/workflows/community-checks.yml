@@ -1,0 +1,22 @@
+name: Community checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      # PR code runs without invitation credentials or write privileges.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Test signature and invitation behavior against synthetic GitHub data
+        run: python3 -m unittest discover -s tests

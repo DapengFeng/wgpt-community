@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "repository": "DapengFeng/wgpt-community",
+  "target_repository": "DapengFeng/wgpt",
+  "source_repository_id": 1416356927,
+  "target_repository_id": 1415618575,
+  "cla_version": "1",
+  "document_path": "CLA.md",
+  "document_sha256": "129c9b9204a64dcea9b4ba2ba0aeec9ce0187898fd024878227486f8b96ffbfa",
+  "signatures_branch": "cla-signatures",
+  "signatures_path": "signatures/v1.json"
+}

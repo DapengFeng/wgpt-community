@@ -1,72 +1,27 @@
-<!-- Follow this project's contribution and review requirements.
-Replace every template token with specific details. Use "None" or "Not applicable"
-with a reason for sections that do not apply. Do not claim checks you did not run. -->
+## Purpose / 目的
 
-## Summary of Changes
+<!-- Describe onboarding or a change to this public repository's own documentation/automation. Never paste private wgpt code or issues. -->
 
-<!-- Describe the problem, the resulting behavior, and the scope of this change. -->
-- {{SUMMARY_OF_CHANGES}}
+Describe your intended contribution or the public-repository change.
 
-## Related Issue
+说明你的贡献意向，或本公开仓库的变更。
 
-<!-- Use "Closes #123" only when this PR fully resolves that issue.
-Otherwise use "Related to #123", or explain why no issue is linked. -->
-{{ISSUE_REFERENCE}}
+## Onboarding / 贡献者接入
 
-## Changelog
+- [ ] My onboarding file is `contributors/<my-github-login>.md` and contains only my GitHub handle and a non-sensitive contribution interest.
 
-<!-- Write concise release-note entries describing observable changes.
-Use applicable categories: Added, Changed, Fixed, Deprecated, Removed, Security.
-For changes with no user-facing impact, use "Internal: ...".
-If the project maintains a changelog or release-note files, update those too. -->
-- {{CHANGELOG_ENTRIES}}
+  接入文件为 `contributors/<我的 GitHub 用户名>.md`，仅包含 GitHub 用户名和不敏感的贡献意向。
 
-## Testing Evidence
+- [ ] I have read [CONTRIBUTING](https://github.com/DapengFeng/wgpt-community/blob/main/CONTRIBUTING.md), the current [CLA](https://github.com/DapengFeng/wgpt-community/blob/main/CLA.md) and [CODE_OF_CONDUCT](https://github.com/DapengFeng/wgpt-community/blob/main/CODE_OF_CONDUCT.md).
 
-<!-- Include the tested version/environment, exact commands, and outcomes.
-For manual checks, include steps plus expected and observed results.
-If a check was skipped or failed, explain why and what remains unverified. -->
+  我已阅读贡献指南、当前 CLA 和行为准则。
 
-### Commands
+The bot will provide the current exact version/hash statement. If you agree, sign it in a **new comment on this PR using your own account**. These checkboxes are not a CLA signature. Product development takes place in private wgpt after accepting an invitation with read/write, not administrator, access.
 
-```bash
-{{TEST_COMMANDS}}
-```
+Bot 会提供准确的当前版本/哈希声明。若同意，请用**自己的账号在本 PR 下新发评论**签署。上述勾选框不构成 CLA 签署。接受具有读写而非管理权限的邀请后，在私有 wgpt 中进行产品开发。
 
-### Results
+## Validation and scope / 验证与范围
 
-```text
-{{TEST_RESULTS}}
-```
+For onboarding, confirm that no credentials, personal contact details or private repository content were included. For public documentation/automation changes, describe behavior, exact test commands/results and remaining checks; do not claim hosted acceptance from offline tests alone.
 
-## Screenshots or Logs
-
-<!-- Include before/after evidence for UI or behavior changes when useful.
-Remove secrets and personal data from screenshots and logs. -->
-{{SCREENSHOTS_OR_LOGS}}
-
-## Breaking Changes
-
-<!-- Select one. For breaking changes, identify affected users, APIs, config,
-data formats or dependencies, and provide migration steps. -->
-- [ ] No breaking changes
-- [ ] Breaking changes described below
-
-{{BREAKING_CHANGES}}
-
-## Risks and Rollback
-
-<!-- Describe known risks, deployment requirements, and how to undo the change.
-Call out irreversible migrations or follow-up work; use "None" with a reason
-when no special handling is needed. -->
-{{RISKS_AND_ROLLBACK}}
-
-## Human Review Checklist
-
-- [ ] I followed the project's applicable contribution guidelines
-- [ ] The changes are limited to the stated problem
-- [ ] The issue, motivation, and acceptance criteria are reflected in this PR
-- [ ] Test commands and results, or manual verification and limitations, are recorded
-- [ ] Documentation and changelog / release notes are updated where applicable
-- [ ] Breaking changes, migration steps, risks, and rollback are documented where applicable
-- [ ] Logs, screenshots, and examples contain no secrets or personal data
+接入申请须确认未包含凭据、个人联系方式或私有仓库内容。公开文档/自动化变更须说明行为、实际测试命令/结果及未验证项；不能仅凭离线测试声称托管验收已通过。

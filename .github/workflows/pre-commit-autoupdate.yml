@@ -1,0 +1,93 @@
+name: pre-commit autoupdate
+
+on:
+  schedule:
+    - cron: '0 0 1 1,4,7,10 *' # runs quarterly
+  workflow_dispatch:
+
+jobs:
+  autoupdate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRE_COMMIT_PAT }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit autoupdate
+        run: pre-commit autoupdate
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet .pre-commit-config.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRE_COMMIT_PAT }}
+          branch: autoupdate/pre-commit
+          delete-branch: true
+          title: 'chore(pre-commit): autoupdate hooks'
+          commit-message: 'chore(pre-commit): autoupdate hooks'
+          body: |
+            ## Summary of Changes
+
+            - Update pre-commit hook revisions through the scheduled or manually triggered workflow.
+            - See `.pre-commit-config.yaml` in the diff for each previous and proposed version.
+
+            ## Related Issue
+
+            No linked issue; routine repository tooling maintenance.
+
+            ## Changelog
+
+            - Internal: update the configured pre-commit hooks to newer revisions.
+
+            ## Testing Evidence
+
+            ### Commands
+
+            ```bash
+            pre-commit autoupdate
+            ```
+
+            ### Results
+
+            - `pre-commit autoupdate` completed on the Ubuntu GitHub Actions runner.
+            - `pre-commit run --all-files` was not run by this workflow.
+              Run it on this branch before requesting review and record the results.
+
+            ## Screenshots or Logs
+
+            [Workflow run and logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            ## Breaking Changes
+
+            - [ ] No breaking changes
+            - [ ] Breaking changes described below
+
+            Not yet assessed. Review upstream release notes for new runtime requirements
+            and changes to lint or formatting rules, then select the appropriate option.
+
+            ## Risks and Rollback
+
+            Updated hooks may require newer tools, change formatting, or report new failures.
+            Revert the changed revisions in `.pre-commit-config.yaml` to restore prior hooks.
+
+            ## Human Review Checklist
+
+            - [ ] I followed the project's applicable contribution guidelines
+            - [ ] The changes are limited to the stated problem
+            - [ ] The issue, motivation, and acceptance criteria are reflected in this PR
+            - [ ] Test commands and results, or manual verification and limitations, are recorded
+            - [ ] Documentation and changelog / release notes are updated where applicable
+            - [ ] Breaking changes, migration steps, risks, and rollback are documented where applicable
+            - [ ] Logs, screenshots, and examples contain no secrets or personal data

@@ -1,0 +1,10 @@
+# IDE
+.vscode/
+
+# C++
+build/
+install/
+
+# Python
+__pycache__/
+*.pyc

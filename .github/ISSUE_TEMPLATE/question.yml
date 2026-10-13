@@ -1,0 +1,41 @@
+name: Question / other issue
+description: Ask a usage question or raise a topic not covered by the other forms
+title: "[Question]: "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      Search the documentation and existing issues first, and follow this project's contribution guidelines.
+      Use the project's support channel or Discussions if it directs questions there. Otherwise, use this form for questions or topics that do not fit another form.
+- type: textarea
+  id: question
+  attributes:
+    label: Question / Topic
+    description: State your question or topic and the outcome you need help with.
+    placeholder: How can I run the repository's validation checks on a clean checkout before opening a pull request?
+  validations:
+    required: true
+- type: textarea
+  id: context
+  attributes:
+    label: Context / What You Tried
+    description: Describe your goal, relevant documentation or issues you checked, and what you have already tried.
+    placeholder: I followed the README setup steps and ran pre-commit, but I am unsure which additional checks apply to documentation changes.
+  validations:
+    required: true
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment / Supporting Details
+    description: If relevant, include the release or commit, platform, exact commands, and output. Remove secrets and personal data.
+    placeholder: |
+      - Version / commit: v1.2.3 / abc1234
+      - Platform: Ubuntu 24.04
+      - Command: pre-commit run --all-files
+- type: textarea
+  id: additional_context
+  attributes:
+    label: Additional Context
+    description: Add links, screenshots, or constraints that would help someone answer.
+    placeholder: Link to the documentation section or related issue that left the question unanswered.

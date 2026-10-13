@@ -1,0 +1,82 @@
+name: Bug report
+description: Report incorrect behavior with a minimal reproducible example
+title: "[Bug]: "
+labels:
+  - bug
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      Search existing issues before submitting, and follow this project's contribution guidelines.
+      Include the smallest example that reproduces the problem. Remove secrets and personal data from attachments and logs.
+- type: textarea
+  id: context
+  attributes:
+    label: Context / Background
+    description: Describe the task affected, its impact, and any known workaround.
+    placeholder: |
+      I cannot validate a clean checkout because a configured hook fails on every run.
+      Skipping that hook is the only workaround I found.
+- type: textarea
+  id: reproduction_steps
+  attributes:
+    label: Reproduction Steps
+    description: |
+      Provide numbered steps, exact commands, prerequisites, and minimal input or a small reproduction repository.
+      Include relevant configuration and how often the problem occurs. Avoid links that require private access.
+    placeholder: |
+      1. Check out the affected commit in a clean clone.
+      2. Install the documented prerequisites.
+      3. Run `pre-commit run --all-files`.
+      4. Observe the failure on the attached minimal YAML file.
+  validations:
+    required: true
+- type: textarea
+  id: expected_behavior
+  attributes:
+    label: Expected Behavior
+    description: State the observable result you expect from these steps.
+    placeholder: The YAML check accepts the valid configuration and exits with status 0.
+  validations:
+    required: true
+- type: textarea
+  id: actual_behavior
+  attributes:
+    label: Actual Behavior
+    description: State the observed result and exact error, including whether it is consistent or intermittent.
+    placeholder: The YAML check exits with status 1 on every run; the parser error is included below.
+  validations:
+    required: true
+- type: textarea
+  id: environment
+  attributes:
+    label: Environment
+    description: |
+      Include the affected release or commit and the environment needed to reproduce it.
+      Add runtime, dependency, browser, hardware, or deployment details only where relevant.
+    placeholder: |
+      - Affected release / commit: v1.2.3 / abc1234
+      - OS and architecture: Ubuntu 24.04, x86_64
+      - Runtime / tool versions: Python 3.12, pre-commit 4.2.0
+      - Installation method: source checkout
+      - Relevant configuration: attached minimal .pre-commit-config.yaml
+  validations:
+    required: true
+- type: textarea
+  id: logs
+  attributes:
+    label: Screenshots / Logs
+    description: |
+      Paste relevant output and stack traces in fenced code blocks, or attach screenshots for visual issues.
+      Include text output when possible so it can be searched. Remove credentials and private information.
+    placeholder: |
+      ```text
+      Paste the command and its complete error output here.
+      ```
+- type: textarea
+  id: regression
+  attributes:
+    label: Regression / Additional Context
+    description: If known, include the last working version, related issues, attempted fixes, or other useful evidence.
+    placeholder: The same input worked in v1.2.2. Reinstalling dependencies did not change the result.

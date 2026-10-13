@@ -1,0 +1,52 @@
+name: Maintenance / technical improvement
+description: Propose changes to tooling, dependencies, CI, tests, or internal structure
+title: "[Maintenance]: "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      Search existing issues before submitting, and follow this project's contribution guidelines.
+      Use this form for internal improvements; use the bug or feature form for behavior changes.
+- type: textarea
+  id: problem
+  attributes:
+    label: Context / Problem
+    description: Describe the affected component, the current limitation, and evidence of its impact.
+    placeholder: Local and CI validation commands have drifted, so contributors see failures only after opening a pull request.
+  validations:
+    required: true
+- type: textarea
+  id: proposed_change
+  attributes:
+    label: Proposed Change / Scope
+    description: Outline the improvement, affected files or systems, and what should remain out of scope.
+    placeholder: |
+      - Reuse the documented validation command in CI.
+      - Update the contribution guide to match.
+      - Keep existing formatting rules unchanged.
+  validations:
+    required: true
+- type: textarea
+  id: acceptance_criteria
+  attributes:
+    label: Acceptance Criteria / Validation
+    description: List measurable completion conditions and how to check for regressions.
+    placeholder: |
+      - [ ] Local and CI validation run the same checks.
+      - [ ] A deliberately invalid fixture fails in both environments.
+      - [ ] The documented command passes on the updated default branch.
+  validations:
+    required: true
+- type: textarea
+  id: risks
+  attributes:
+    label: Risks / Compatibility
+    description: Note migration needs, dependency constraints, performance tradeoffs, or rollout considerations, if any.
+    placeholder: Check that the shared command works on all currently supported operating systems.
+- type: textarea
+  id: alternatives
+  attributes:
+    label: Alternatives / Supporting Evidence
+    description: Include other approaches considered, related issues, CI runs, benchmarks, or dependency release notes.
+    placeholder: Keeping separate commands is simpler initially but allows the same drift to recur.

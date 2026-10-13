@@ -1,0 +1,68 @@
+name: validate issue and PR placeholders
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened, ready_for_review]
+
+permissions:
+  issues: read
+  pull-requests: read
+
+jobs:
+  validate-placeholders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for unresolved template placeholders
+        env:
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+
+          with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as file:
+              event = json.load(file)
+
+          html_comment_pattern = re.compile(r"<!--.*?-->", re.DOTALL)
+          # Submission templates use token-style placeholders such as
+          # {{TEST_RESULTS}} and {{CHANGELOG_ENTRIES}}.
+          placeholder_pattern = re.compile(r"(?<!\$)\{\{[A-Z][A-Z0-9_]*\}\}")
+          fields_to_check = []
+
+          issue = event.get("issue")
+          if issue:
+              fields_to_check.extend(
+                  [
+                      ("issue title", issue.get("title", "")),
+                      ("issue body", issue.get("body", "")),
+                  ]
+              )
+
+          pull_request = event.get("pull_request")
+          if pull_request:
+              fields_to_check.extend(
+                  [
+                      ("pull request title", pull_request.get("title", "")),
+                      ("pull request body", pull_request.get("body", "")),
+                  ]
+              )
+
+          failures = []
+          for label, value in fields_to_check:
+              sanitized_value = html_comment_pattern.sub("", value or "")
+              matches = sorted(set(placeholder_pattern.findall(sanitized_value)))
+              if matches:
+                  failures.append(f"{label}: {', '.join(matches)}")
+
+          if failures:
+              print("Unresolved template placeholders detected:")
+              for failure in failures:
+                  print(f"- {failure}")
+              sys.exit(1)
+
+          print("No unresolved template placeholders found.")
+          PY

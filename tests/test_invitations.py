@@ -83,10 +83,12 @@ class GitHubFixture:
             self.source: {
                 "id": self.policy.source_repository_id,
                 "full_name": self.policy.repository, "private": False,
+                "owner": {"type": "User"},
             },
             self.target: {
                 "id": self.policy.target_repository_id,
                 "full_name": self.policy.target_repository, "private": True,
+                "owner": {"type": "User"},
             },
         }
         self.public, self.private = MemoryGitHub(self, "public"), MemoryGitHub(self, "private")
@@ -208,6 +210,8 @@ class GitHubFixture:
                 acknowledgement.update(self.journal_ack_override)
             return {"content": acknowledgement}
         if method == "PUT" and route.startswith(self.target + "/collaborators/"):
+            if body is not None:
+                raise AssertionError("Personal repository invitations must omit role parameters")
             if self.journal_data is None or self.journal_data["attempts"][-1]["status"] != "attempted":
                 raise AssertionError("Invitation was sent before durable intent")
             login = route.rsplit("/", 1)[1]
@@ -236,6 +240,7 @@ class InvitationTests(unittest.TestCase):
         self.assertEqual(self.api.run(), [{"user_id": 11, "status": "invited"}])
         self.assertEqual(self.api.run(), [{"user_id": 11, "status": "existing_invitation"}])
         self.assertEqual(len(self.api.mutations(side="private", method="PUT")), 1)
+        self.assertIsNone(self.api.mutations(side="private", method="PUT")[0][3])
         self.assertEqual(self.api.journal_data["attempts"][0]["invitation_id"], 500)
         self.assertEqual(self.api.journal_data["attempts"][0]["status"], "invited")
 
@@ -452,6 +457,16 @@ class InvitationTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, "identity or visibility"):
                         api.run()
                     self.assertEqual(api.mutations(), [])
+
+    def test_nonpersonal_target_owner_is_rejected_without_side_effects(self):
+        for owner in ({"type": "Organization"}, {"type": "Bot"}, {}):
+            with self.subTest(owner=owner):
+                api = GitHubFixture()
+                api.sign()
+                api.repository_values[api.target]["owner"] = owner
+                with self.assertRaises(ValueError):
+                    api.run()
+                self.assertEqual(api.mutations(), [])
 
     def test_inventory_pagination_finds_existing_access_on_second_page(self):
         self.api.collaborators = [{"id": i} for i in range(100, 200)] + [{"id": 11}]

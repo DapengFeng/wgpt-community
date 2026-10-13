@@ -16,6 +16,11 @@ from .signatures import (
 )
 
 CONTEXT = "cla/signature"
+API_STAGES = frozenset({
+    "repository_lookup", "pull_requests_list", "pull_request_lookup", "status_pending",
+    "ledger_read", "comment_event", "comments_list", "commit_authors", "signature_verify",
+    "instructions_create", "instructions_update", "ledger_write", "head_recheck", "status_publish",
+})
 
 
 def contributor_ids(client, policy, pull):
@@ -51,6 +56,7 @@ class SignatureGate:
         self.policy = policy
         self.prefix = f"/repos/{policy.repository}"
         self.document_url = f"https://github.com/{policy.repository}/blob/{document_revision}/{policy.document_path}"
+        self.stage = "repository_lookup"
 
     def status(self, pull, state, description):
         sha = pull.get("head", {}).get("sha")
@@ -80,16 +86,28 @@ class SignatureGate:
             user = comment.get("user", {})
             if user.get("type") == "Bot" and user.get("login") == "github-actions[bot]" and comment.get("body", "").startswith(marker):
                 if comment["body"] != body:
+                    self.stage = "instructions_update"
                     self.client.request("PATCH", f"{self.prefix}/issues/comments/{comment['id']}", {"body": body})
                 return
+        self.stage = "instructions_create"
         self.client.request("POST", f"{self.prefix}/issues/{pull['number']}/comments", {"body": body})
 
     def run(self, event_name, event):
+        try:
+            return self._run(event_name, event)
+        except GitHubError as error:
+            # Only static stage identifiers leave the credential boundary.
+            error.stage = self.stage
+            raise
+
+    def _run(self, event_name, event):
+        self.stage = "repository_lookup"
         repository = self.client.request("GET", self.prefix)
         if repository.get("id") != self.policy.source_repository_id or repository.get("full_name") != self.policy.repository or repository.get("private") is not False:
             raise ValueError("Unexpected public repository identity")
         if event.get("repository", {}).get("id") != self.policy.source_repository_id:
             raise ValueError("Event belongs to another repository")
+        self.stage = "pull_requests_list"
         pulls = self.client.paginate(self.prefix + "/pulls?state=open&base=main")
         pending = []
         try:
@@ -97,19 +115,24 @@ class SignatureGate:
                 number = item.get("number")
                 if type(number) is not int or number <= 0:
                     raise ValueError("Invalid pull request identity")
+                self.stage = "pull_request_lookup"
                 pull = self.client.request("GET", f"{self.prefix}/pulls/{number}")
                 if pull.get("state") != "open" or pull.get("base", {}).get("ref") != "main":
                     continue
                 if pull.get("base", {}).get("repo", {}).get("id") != self.policy.source_repository_id:
                     raise ValueError("Unexpected pull request base repository")
+                self.stage = "status_pending"
                 self.status(pull, "pending", "Checking version-bound contributor signatures")
                 pending.append(pull)
+            self.stage = "ledger_read"
             ledger = read_ledger(self.client, self.policy)
+            self.stage = "comment_event"
             changed = event_name == "issue_comment" and apply_comment_event(self.client, self.policy, ledger, event)
             comment_pages = {}
             # GitHub concurrency can replace queued event runs. Reconcile all
             # open PRs so a missed creation event does not lose a valid signature.
             for pull in pending:
+                self.stage = "comments_list"
                 comments = self.client.paginate(f"{self.prefix}/issues/{pull['number']}/comments")
                 comment_pages[pull["number"]] = comments
                 changed = record_unseen_comments(comments, pull, self.policy, ledger) or changed
@@ -118,6 +141,7 @@ class SignatureGate:
             outcomes = []
             for pull in pending:
                 try:
+                    self.stage = "commit_authors"
                     authors = contributor_ids(self.client, self.policy, pull)
                 except (ValueError, TypeError) as error:
                     outcomes.append((pull, "failure", str(error)))
@@ -126,6 +150,7 @@ class SignatureGate:
                 for user_id in sorted(authors):
                     if user_id not in live:
                         record = latest.get(user_id)
+                        self.stage = "signature_verify"
                         valid = record is not None and verify_live_signature(self.client, self.policy, record)
                         live[user_id] = valid
                         if record is not None and record["status"] == "active" and not valid:
@@ -138,13 +163,16 @@ class SignatureGate:
                 else:
                     outcomes.append((pull, "success", f"All human contributors signed CLA v{self.policy.cla_version}"))
             if changed:
+                self.stage = "ledger_write"
                 write_ledger(self.client, self.policy, ledger)
             passed = 0
             for pull, state, description in outcomes:
+                self.stage = "head_recheck"
                 current = self.client.request("GET", f"{self.prefix}/pulls/{pull['number']}")
                 if current.get("head", {}).get("sha") != pull["head"]["sha"]:
                     state, description = "failure", "PR head changed during verification; a fresh CLA check is required"
                 # Always bind the outcome to the exact head whose commits were read.
+                self.stage = "status_publish"
                 self.status(pull, state, description)
                 passed += state == "success"
             return {"checked_pull_requests": len(outcomes), "passed": passed}

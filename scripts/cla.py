@@ -6,8 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from cla.gate import SignatureGate
-from cla.github import GitHubClient
+from cla.gate import API_STAGES, SignatureGate
+from cla.github import GitHubClient, GitHubError
 from cla.policy import load_policy
 
 
@@ -30,10 +30,20 @@ def main():
     print(json.dumps(SignatureGate(client, policy, document_revision=revision).run(name, event)))
 
 
+def error_diagnostics(error):
+    details = {"error": type(error).__name__}
+    if isinstance(error, GitHubError):
+        status = error.status
+        details["http_status"] = status if type(status) is int and 0 <= status <= 599 else 0
+        stage = getattr(error, "stage", None)
+        details["stage"] = stage if isinstance(stage, str) and stage in API_STAGES else "startup"
+    return details
+
+
 if __name__ == "__main__":
     try:
         main()
     except Exception as error:  # noqa: BLE001 - redact unexpected failures at the credential boundary.
         # API failures never print request bodies, tokens or untrusted PR content.
-        print(f"CLA gate failed: {type(error).__name__}", file=sys.stderr)
+        print("CLA gate failed: " + json.dumps(error_diagnostics(error)), file=sys.stderr)
         raise SystemExit(1)

@@ -38,6 +38,9 @@ class GitHubClient:
         ):
             raise ValueError("Expected an absolute GitHub API path, not a URL")
         encoded = None if body is None else json.dumps(body, allow_nan=False).encode("utf-8")
+        if method == "PUT" and body is None:
+            # Parameterless collaborator invitations require Content-Length: 0.
+            encoded = b""
         if encoded is not None and len(encoded) > 2 * 1024 * 1024:
             raise ValueError("GitHub request body exceeds limit")
         request = urllib.request.Request(

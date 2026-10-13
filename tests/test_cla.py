@@ -4,10 +4,13 @@ import base64
 import copy
 import hashlib
 import json
+import runpy
 import sys
 import tempfile
 import unittest
 import urllib.error
+import urllib.request
+import urllib.response
 from dataclasses import replace
 from io import BytesIO
 from pathlib import Path
@@ -390,6 +393,25 @@ class GateTests(unittest.TestCase):
             SignatureGate(client, POLICY, document_revision="d" * 40).run("schedule", self.event())
         self.assertFalse(any(method != "GET" for method, _, _ in client.calls))
 
+    def test_comment_permission_error_reports_original_stage_after_error_status(self):
+        client = FakeGitHub()
+        client.responses[("POST", PREFIX + "/issues/7/comments")] = GitHubError(403, "Sensitive server response")
+        with self.assertRaises(GitHubError) as failure:
+            SignatureGate(client, POLICY, document_revision="d" * 40).run("schedule", self.event())
+        self.assertEqual(failure.exception.stage, "instructions_create")
+        self.assertEqual(client.statuses(), [(SHA, "pending"), (SHA, "error")])
+        diagnostic = runpy.run_path(str(ROOT / "scripts/cla.py"))["error_diagnostics"]
+        self.assertEqual(diagnostic(failure.exception), {
+            "error": "GitHubError", "http_status": 403, "stage": "instructions_create",
+        })
+
+    def test_cli_diagnostics_never_include_error_body_or_arbitrary_stage(self):
+        diagnostic = runpy.run_path(str(ROOT / "scripts/cla.py"))["error_diagnostics"]
+        error = GitHubError(429, "synthetic-secret-body")
+        error.stage = "synthetic-secret-stage"
+        self.assertEqual(diagnostic(error), {"error": "GitHubError", "http_status": 429, "stage": "startup"})
+        self.assertEqual(diagnostic(ValueError("synthetic-secret-body")), {"error": "ValueError"})
+
 
 class Response(BytesIO):
     status = 200
@@ -407,6 +429,36 @@ class Opener:
 
 
 class TransportTests(unittest.TestCase):
+    def test_empty_put_uses_zero_length_body_without_permission_parameters(self):
+        class RecordingHTTPSHandler(urllib.request.HTTPSHandler):
+            def __init__(self):
+                super().__init__()
+                self.requests = []
+
+            def https_open(self, request):
+                self.requests.append(request)
+                response = urllib.response.addinfourl(
+                    BytesIO(b""), {}, request.full_url, code=204,
+                )
+                response.msg = "No Content"
+                return response
+
+        # Exercise urllib's real header preparation, then stop before socket I/O.
+        handler = RecordingHTTPSHandler()
+        opener = urllib.request.build_opener(
+            urllib.request.ProxyHandler({}), _NoRedirect(), handler,
+        )
+        result = GitHubClient("synthetic-token", opener=opener).request(
+            "PUT", "/repos/fixture/repository/collaborators/fixture-user",
+        )
+        self.assertIsNone(result)
+        self.assertEqual(len(handler.requests), 1)
+        request = handler.requests[0]
+        self.assertEqual(request.get_method(), "PUT")
+        self.assertEqual(request.data, b"")
+        self.assertEqual(request.get_header("Content-length"), "0")
+        self.assertFalse(request.has_header("Transfer-encoding"))
+
     def test_requests_use_fixed_api_origin_and_bounded_timeout(self):
         opener = Opener()
         client = GitHubClient("synthetic-token", opener=opener)

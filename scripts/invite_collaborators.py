@@ -163,6 +163,8 @@ class InvitationReconciler:
                 or value.get("full_name") != name or value.get("private") is not private
             ):
                 raise ValueError("Repository identity or visibility changed")
+            if private and value.get("owner", {}).get("type") != "User":
+                raise ValueError("Invitation policy requires a personal repository")
         branch = self.public.request(
             "GET", f"/repos/{self.policy.repository}/branches/{self.policy.signatures_branch}",
         )
@@ -275,7 +277,6 @@ class InvitationReconciler:
             recent += 1
             invitation = self.private.request(
                 "PUT", f"/repos/{self.policy.target_repository}/collaborators/{login}",
-                {"permission": "push"},
             )
             if invitation is None:
                 self.journal.update(item, "existing_access")

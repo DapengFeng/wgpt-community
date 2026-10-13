@@ -34,13 +34,13 @@ These are independently authored **offline, synthetic illustrations**, not live 
 
    CLA bot 会发布包含当前协议版本及 SHA-256 的准确签署声明。若你同意，将整段声明复制为**由你本人在自己的 PR 下新发的一条评论**。勾选框、commit 签名或他人评论均不能代替 CLA 签署。
 
-4. Once the signature is valid, the invitation reconciler can invite you to the private repository. Accept GitHub's invitation, then create development branches and pull requests there. The onboarding PR does not need to merge before the invitation is sent.
+4. After `cla/signature` passes, wait for the public repository owner to review your request and select **Review changes → Approve** on its current commit. Signing alone does not grant access. Keep the onboarding PR open until you accept GitHub's invitation, then create development branches and pull requests in the private repository.
 
-   签署有效后，邀请同步任务即可邀请你加入私有仓库。接受 GitHub 邀请后，在该私有仓库中建立开发分支并提交 PR。邀请发送前不要求合入接入 PR。
+   `cla/signature` 通过后，等待公开仓库所有者审阅申请，并对当前提交选择 **Review changes → Approve**。仅签署协议不会授予访问权限。接受 GitHub 邀请前保持接入 PR 开放；接受后，在私有仓库中建立开发分支并提交 PR。
 
-The private repository belongs to a personal account: collaborators receive **read/write access, not read-only or administrator access**. Any eligible signer is invited automatically; signing is not a request for a separate manual selection. The reconciler is scheduled every 20 minutes, but GitHub can delay or disable scheduled runs. See [permissions, configuration and recovery](CONTRIBUTING.md#maintainer-operations--维护者操作).
+The private repository belongs to a personal account: collaborators receive **read/write access, not read-only or administrator access**. Invitations require both a valid CLA signature and the owner's approval submitted after that signature for the current PR head. Comments, labels and bot reviews do not qualify. After approval, the reconciler is scheduled every 20 minutes; GitHub can delay or disable scheduled runs, and the owner can dispatch it from trusted `main`. See [permissions, configuration and recovery](CONTRIBUTING.md#maintainer-operations--维护者操作).
 
-私有仓库属于个人账号：协作者获得**读写权限，而非只读或管理员权限**。满足条件的签署者会被自动邀请；签署不代表再等待另一次人工筛选。邀请同步任务计划每 20 分钟执行一次，但 GitHub 可能延迟或停用定时运行。详见[权限、配置及恢复说明](CONTRIBUTING.md#maintainer-operations--维护者操作)。
+私有仓库属于个人账号：协作者获得**读写权限，而非只读或管理员权限**。邀请同时要求有效 CLA 签署，以及所有者在该签署之后针对当前 PR head 提交的批准审阅。评论、标签和 bot 审阅均不能代替批准。批准后，邀请同步任务计划每 20 分钟执行一次；GitHub 可能延迟或停用定时运行，所有者也可从可信的 `main` 手动调度。详见[权限、配置及恢复说明](CONTRIBUTING.md#maintainer-operations--维护者操作)。
 
 ## Public records and withdrawal / 公开记录与撤回
 
@@ -58,9 +58,9 @@ CLA 和邀请自动化使用 Python 标准库；演示回归测试还使用 Node
 python3 -m unittest discover -s tests
 ```
 
-Offline tests do not prove that GitHub permissions, an external contributor's signature, the invitation and its acceptance work together. Hosted end-to-end acceptance remains open until a real external-account run is recorded. Maintainers should follow the [deployment and acceptance procedure](CONTRIBUTING.md#deployment-and-acceptance--部署与验收), rather than treating a passing local test as deployment evidence.
+Offline tests do not prove that GitHub permissions, an external contributor's signature, owner approval, the invitation and its acceptance work together. Hosted end-to-end acceptance remains open until a real external-account run is recorded. Maintainers should follow the [deployment and acceptance procedure](CONTRIBUTING.md#deployment-and-acceptance--部署与验收), rather than treating a passing local test as deployment evidence.
 
-离线测试不能证明 GitHub 权限、外部贡献者签署、邀请及接受邀请的完整链路有效。完成并记录真实外部账号测试前，托管端到端验收仍未完成。维护者应遵循[部署与验收流程](CONTRIBUTING.md#deployment-and-acceptance--部署与验收)，不能将本地测试通过当作部署证据。
+离线测试不能证明 GitHub 权限、外部贡献者签署、所有者批准、邀请及接受邀请的完整链路有效。完成并记录真实外部账号测试前，托管端到端验收仍未完成。维护者应遵循[部署与验收流程](CONTRIBUTING.md#deployment-and-acceptance--部署与验收)，不能将本地测试通过当作部署证据。
 
 This repository's own material is provided under the [MIT license](LICENSE). The [CLA](CLA.md) defines the contribution agreement; it does not grant rights to third-party services, accounts, content or trademarks.
 

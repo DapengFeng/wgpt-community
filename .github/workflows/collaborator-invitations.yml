@@ -23,6 +23,7 @@ jobs:
     environment: collaborator-invitations
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -30,7 +31,7 @@ jobs:
           persist-credentials: false
       - name: Verify the signature and invitation contracts
         run: python3 -m unittest discover -s tests
-      - name: Reconcile valid signatures and invitations
+      - name: Reconcile signatures, human approvals and invitations
         env:
           GITHUB_TOKEN: ${{ github.token }}
           WGPT_COLLABORATOR_TOKEN: ${{ secrets.WGPT_COLLABORATOR_TOKEN }}

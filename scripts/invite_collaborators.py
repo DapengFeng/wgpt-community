@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Reconcile verified CLA signatures with private repository invitations."""
+"""Invite contributors only after a live CLA and owner approval of their PR."""
 
 import argparse
 import base64
 import hashlib
 import json
 import os
+import re
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -34,6 +36,108 @@ def timestamp(value):
     if not isinstance(value, str) or not value.endswith("Z"):
         raise ValueError("Invalid invitation timestamp")
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+@dataclass(frozen=True)
+class MaintainerApproval:
+    """Bind human approval to one applicant PR revision and signing request."""
+
+    pull_request: int
+    review_id: int
+    reviewer_id: int
+    head_sha: str
+    submitted_at: str
+
+    @classmethod
+    def from_dict(cls, value):
+        if (
+            not isinstance(value, dict) or set(value) != set(cls.__dataclass_fields__)
+            or any(not positive_id(value.get(key)) for key in ("pull_request", "review_id", "reviewer_id"))
+            or not isinstance(value.get("head_sha"), str)
+            or not re.fullmatch(r"[0-9a-f]{40}", value["head_sha"])
+        ):
+            raise ValueError("Invalid maintainer approval evidence")
+        timestamp(value.get("submitted_at"))
+        return cls(**value)
+
+
+class ApprovalGate:
+    """Only the verified public repository owner can authorize private access."""
+
+    def __init__(self, public, policy, owner_id):
+        self.public, self.policy, self.owner_id = public, policy, owner_id
+
+    def read(self, record):
+        path = f"/repos/{self.policy.repository}/pulls/{record['pull_request']}"
+        try:
+            pull = self.public.request("GET", path)
+        except GitHubError as error:
+            if error.status == 404:
+                return None
+            raise
+        if not self.eligible_pull(pull, record):
+            return None
+        head = pull["head"]["sha"]
+        latest, seen = None, set()
+        # GitHub returns reviews chronologically. Comments do not replace a decision;
+        # dismissals and change requests do, without reviving an older approval.
+        for review in self.public.paginate(path + "/reviews"):
+            if (
+                not isinstance(review, dict) or not positive_id(review.get("id"))
+                or review["id"] in seen or not isinstance(review.get("user"), dict)
+                or not positive_id(review["user"].get("id"))
+            ):
+                raise ValueError("Invalid pull request review evidence")
+            seen.add(review["id"])
+            user = review["user"]
+            if user["id"] != self.owner_id or user.get("type") != "User":
+                continue
+            if review.get("pull_request_url") != "https://api.github.com" + path:
+                raise ValueError("Approval belongs to a different pull request")
+            state = review.get("state")
+            if state in {"COMMENTED", "PENDING"}:
+                continue
+            if state not in {"APPROVED", "CHANGES_REQUESTED", "DISMISSED"}:
+                raise ValueError("Unknown maintainer review state")
+            latest = review
+        if (
+            latest is None or latest["state"] != "APPROVED"
+            or latest.get("commit_id") != head
+            or timestamp(latest.get("submitted_at")) <= timestamp(record["created_at"])
+        ):
+            return None
+        # A head change or PR closure during pagination must invalidate the read.
+        current = self.public.request("GET", path)
+        if not self.eligible_pull(current, record) or current["head"]["sha"] != head:
+            return None
+        return MaintainerApproval.from_dict({
+            "pull_request": record["pull_request"], "review_id": latest["id"],
+            "reviewer_id": self.owner_id, "head_sha": head,
+            "submitted_at": latest["submitted_at"],
+        })
+
+    def eligible_pull(self, pull, record):
+        if (
+            not isinstance(pull, dict) or not positive_id(pull.get("number"))
+            or any(not isinstance(pull.get(key), dict) for key in ("user", "base", "head"))
+            or not isinstance(pull["base"].get("repo"), dict)
+            or not positive_id(pull["user"].get("id"))
+            or not positive_id(pull["base"]["repo"].get("id"))
+            or not isinstance(pull["base"].get("ref"), str) or not pull["base"]["ref"]
+            or pull.get("state") not in {"open", "closed"}
+            or type(pull.get("draft")) is not bool
+            or not isinstance(pull["head"].get("sha"), str)
+            or not re.fullmatch(r"[0-9a-f]{40}", pull["head"]["sha"])
+        ):
+            raise ValueError("Invalid approval pull request response")
+        return (
+            pull.get("number") == record["pull_request"]
+            and pull.get("state") == "open" and pull.get("draft") is False
+            and pull.get("user", {}).get("id") == record["user_id"]
+            and record["user_id"] != self.owner_id
+            and pull.get("base", {}).get("ref") == "main"
+            and pull.get("base", {}).get("repo", {}).get("id") == self.policy.source_repository_id
+        )
 
 
 class InvitationJournal:
@@ -91,6 +195,9 @@ class InvitationJournal:
                 raise ValueError("Duplicate invitation journal record")
             keys.add(key)
             timestamp(item["attempted_at"])
+            # Old journals remain recovery evidence, never a substitute for live approval.
+            if "approval" in item:
+                MaintainerApproval.from_dict(item["approval"])
         if not isinstance(file.get("sha"), str) or len(file["sha"]) != 40:
             raise ValueError("Missing invitation journal revision")
         self.attempts, self.sha = data["attempts"], file["sha"]
@@ -123,7 +230,9 @@ class InvitationJournal:
             and item["comment_id"] == record["comment_id"]
         )), None)
 
-    def begin(self, record, status):
+    def begin(self, record, status, *, approval=None):
+        if status == "attempted" and not isinstance(approval, MaintainerApproval):
+            raise ValueError("Invitation intent requires maintainer approval evidence")
         item = {
             "user_id": record["user_id"], "comment_id": record["comment_id"],
             "cla_version": self.policy.cla_version,
@@ -131,6 +240,8 @@ class InvitationJournal:
             "attempted_at": utc_now(), "status": status,
             "request_intent": status == "attempted",
         }
+        if approval is not None:
+            item["approval"] = asdict(approval)
         self.attempts.append(item)
         self.save()
         return item
@@ -148,6 +259,7 @@ class InvitationReconciler:
         self.apply = apply
         self.journal = InvitationJournal(public, policy)
         self.events = []
+        self.approval_gate = None
 
     def event(self, user_id, status):
         self.events.append({"user_id": user_id, "status": status})
@@ -165,6 +277,11 @@ class InvitationReconciler:
                 raise ValueError("Repository identity or visibility changed")
             if private and value.get("owner", {}).get("type") != "User":
                 raise ValueError("Invitation policy requires a personal repository")
+            if not private:
+                owner = value.get("owner", {})
+                if owner.get("type") != "User" or not positive_id(owner.get("id")):
+                    raise ValueError("Approval policy requires a human repository owner")
+                self.approval_gate = ApprovalGate(self.public, self.policy, owner["id"])
         branch = self.public.request(
             "GET", f"/repos/{self.policy.repository}/branches/{self.policy.signatures_branch}",
         )
@@ -205,10 +322,20 @@ class InvitationReconciler:
             raise ValueError("GitHub account identity changed")
         return login
 
-    def cancel_withdrawn(self, valid, pending):
+    def signature_current(self, record):
+        # A still-valid old comment cannot authorize a newer request to join.
+        latest = latest_signatures(read_ledger(self.public, self.policy).records, self.policy)
+        return latest.get(record["user_id"]) == record and verify_live_signature(self.public, self.policy, record)
+
+    def cancel_withdrawn(self, valid, approvals, pending):
         # Cancellation applies only to an exact invitation created by this worker.
         for item in self.journal.attempts:
-            if item["user_id"] in valid or item["status"] not in {"invited", "attempted", "unresolved"}:
+            record = valid.get(item["user_id"])
+            eligible = (
+                record is not None and record["comment_id"] == item["comment_id"]
+                and approvals.get(item["user_id"]) is not None
+            )
+            if eligible or item["status"] not in {"invited", "attempted", "unresolved"}:
                 continue
             invitation = pending.get(item["user_id"])
             owned = invitation and invitation["id"] == item.get("invitation_id")
@@ -220,6 +347,7 @@ class InvitationReconciler:
                     "DELETE", f"/repos/{self.policy.target_repository}/invitations/{invitation['id']}",
                 )
                 self.journal.update(item, "cancelled")
+                del pending[item["user_id"]]
             else:
                 self.journal.update(item, "withdrawn")
             self.event(item["user_id"], item["status"])
@@ -229,13 +357,19 @@ class InvitationReconciler:
         snapshot = read_ledger(self.public, self.policy)
         latest = latest_signatures(snapshot.records, self.policy)
         # Complete evidence reads before any invitation side effects.
+        approvals = {
+            user_id: self.approval_gate.read(record) if record["status"] == "active" else None
+            for user_id, record in latest.items()
+        }
         valid = {
             user_id: record for user_id, record in latest.items()
             if verify_live_signature(self.public, self.policy, record)
         }
         users, pending = self.inventory()
         self.journal.load()
-        self.cancel_withdrawn(valid, pending)
+        if latest_signatures(read_ledger(self.public, self.policy).records, self.policy) != latest:
+            raise ValueError("Signature ledger changed during reconciliation; no invitation changes applied")
+        self.cancel_withdrawn(valid, approvals, pending)
         sent = 0
         cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
         recent = sum(
@@ -244,6 +378,9 @@ class InvitationReconciler:
         )
         for user_id, record in sorted(valid.items()):
             item = self.journal.find(record)
+            if approvals[user_id] is None and user_id not in users:
+                self.event(user_id, "human_approval_required")
+                continue
             if user_id in users or user_id in pending:
                 status = "existing_access" if user_id in users else "existing_invitation"
                 if self.apply:
@@ -268,13 +405,26 @@ class InvitationReconciler:
                 sent += 1
                 recent += 1
                 continue
-            # Recheck the live signature immediately before recording irreversible intent.
-            if not verify_live_signature(self.public, self.policy, record):
+            # Recheck both independent gates before recording irreversible intent.
+            if not self.signature_current(record):
                 self.event(user_id, "signature_no_longer_valid")
                 continue
-            item = self.journal.begin(record, "attempted")
+            approval = self.approval_gate.read(record)
+            if approval is None:
+                self.event(user_id, "human_approval_required")
+                continue
+            item = self.journal.begin(record, "attempted", approval=approval)
             sent += 1
             recent += 1
+            # Persisting intent is a network write. Revalidate afterwards as well;
+            # a withdrawal during that write must not authorize an invitation.
+            if (
+                not self.signature_current(record)
+                or self.approval_gate.read(record) != approval
+            ):
+                self.journal.update(item, "withdrawn")
+                self.event(user_id, "authorization_changed_before_invitation")
+                continue
             invitation = self.private.request(
                 "PUT", f"/repos/{self.policy.target_repository}/collaborators/{login}",
             )

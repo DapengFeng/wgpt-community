@@ -20,6 +20,10 @@ The bot will provide the current exact version/hash statement. If you agree, sig
 
 Bot 会提供准确的当前版本/哈希声明。若同意，请用**自己的账号在本 PR 下新发评论**签署。上述勾选框不构成 CLA 签署。接受具有读写而非管理权限的邀请后，在私有 wgpt 中进行产品开发。
 
+Signing alone does not trigger an invitation. Wait for the public repository owner to **Approve** this PR after signing, and keep it open until you accept the invitation. New commits require a fresh approval.
+
+仅签署不会触发邀请。签署后须等待公开仓库所有者 **Approve** 本 PR，并在接受邀请前保持 PR 开放。新增提交需要重新批准。
+
 ## Validation and scope / 验证与范围
 
 For onboarding, confirm that no credentials, personal contact details or private repository content were included. For public documentation/automation changes, describe behavior, exact test commands/results and remaining checks; do not claim hosted acceptance from offline tests alone.

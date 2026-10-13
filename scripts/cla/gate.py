@@ -78,9 +78,13 @@ class SignatureGate:
             "每位真人 commit 作者均须已有本人有效签署，旧签署可复用。不要在公开 PR 中添加秘密或私有源码。\n\n"
             "```text\n" + self.policy.statement + "\n```\n\n"
             "Editing or deleting your signing comment revokes its future use. Sign again in a new comment. "
-            "The required commit status is `cla/signature`; a workflow run alone is not approval.\n\n"
+            "The required commit status is `cla/signature`; it does not grant repository access. "
+            "After signing, wait for the public repository owner to review and Approve this PR's current revision. "
+            "Keep it open until you accept the invitation; new commits need a new approval.\n\n"
             "修改或删除签署评论会撤销后续使用资格，恢复时须发布新的签署评论。"
-            "必需的提交状态为 `cla/signature`，工作流运行本身不代表核验通过。"
+            "必需的提交状态为 `cla/signature`，它不授予仓库访问权。"
+            "签署后，等待公开仓库所有者审阅并 Approve 本 PR 的当前版本。"
+            "接受邀请前请保持 PR 开放；新增提交需要重新批准。"
         )
         for comment in comments:
             user = comment.get("user", {})

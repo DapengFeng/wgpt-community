@@ -1,5 +1,7 @@
 """Verify that the public teaching demo remains local, synthetic and deterministic."""
 
+import hashlib
+import json
 import re
 import shutil
 import subprocess
@@ -72,6 +74,28 @@ class DemoTests(unittest.TestCase):
                 path = (document.parent / target.split("#", 1)[0]).resolve()
                 self.assertTrue(path.is_relative_to(ROOT))
                 self.assertTrue(path.exists(), f"Missing local link in {document.name}: {target}")
+
+    def test_published_recordings_match_sources_and_remain_small_finite_gifs(self):
+        manifest = json.loads((DEMO / "recordings/manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["schema_version"], 1)
+        self.assertTrue(manifest["synthetic"])
+        self.assertEqual(manifest["provider_calls"], 0)
+        self.assertEqual(set(manifest["sources"]), {"index.html", "style.css", "demo.js"})
+        for name, digest in manifest["sources"].items():
+            self.assertEqual(hashlib.sha256((DEMO / name).read_bytes()).hexdigest(), digest, "Re-record changed demos")
+        self.assertEqual(
+            hashlib.sha256((ROOT / "scripts/record_demos.py").read_bytes()).hexdigest(),
+            manifest["recorder_sha256"], "Re-record after changing capture settings",
+        )
+        self.assertEqual({item["file"] for item in manifest["recordings"]}, {"protocol.gif", "recovery.gif", "tools.gif"})
+        for item in manifest["recordings"]:
+            data = (DEMO / "recordings" / item["file"]).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(), item["sha256"])
+            self.assertEqual(data[:6], b"GIF89a")
+            self.assertEqual(int.from_bytes(data[6:8], "little"), manifest["width"])
+            self.assertEqual(int.from_bytes(data[8:10], "little"), manifest["height"])
+            self.assertNotIn(b"NETSCAPE2.0", data, "Recordings should play once, not loop indefinitely")
+            self.assertLess(len(data), 1_000_000, "Keep inline previews lightweight")
 
     def test_deterministic_scenarios_with_node(self):
         node = shutil.which("node")

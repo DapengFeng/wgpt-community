@@ -7,6 +7,16 @@ const path = require("node:path");
 const vm = require("node:vm");
 const demo = require("../demos/demo.js");
 
+test("recording metadata follows the same scenario states as the interactive demo", () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "../demos/recordings/manifest.json"), "utf8"));
+  for (const recording of manifest.recordings) {
+    const id = recording.file.replace(/\.gif$/, "");
+    const { states } = finish(id);
+    assert.equal(recording.frames, states.length);
+    assert.deepEqual(recording.states, states.map(value => ({ state: value.state, submissions: value.submissionCount })));
+  }
+});
+
 function finish(id) {
   const session = demo.createSession(id);
   const states = [demo.snapshot(session)];

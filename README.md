@@ -8,17 +8,49 @@ wgpt's mission is to make website-based AI a dependable collaborator for coding 
 
 wgpt 的使命是通过可恢复的本地 bridge，让网页端 AI 成为编程 agent 和 SDK 应用可靠的协作者。本公开仓库不镜像私有源码、发布产物、issue、账号数据或客户端会话。不要将私有仓库内容复制到公开 issue、PR 或 fork。
 
-## Try the continuity lab / 体验连续性实验室
+## Watch the continuity lab / 观看连续性实验室
 
-[![Offline synthetic scenarios: protocols, recovery and client-owned tools / 离线合成场景：协议、恢复与客户端工具](demos/overview.svg)](demos/README.md)
+Watch directly on GitHub—no installation, account or deployment needed. These GIFs record the existing **offline HTML simulation** using synthetic data and its **Next step** control. Frame hold times are edited for readability; no wgpt service, AI provider or client tool runs in these scenarios.
 
-See how a recoverable bridge can keep a task moving: translate one reply into two client protocols, recover an interrupted request without a second submission, and carry a tool call while keeping execution with the client. The [interactive lab](demos/README.md) opens locally in your browser and needs no account, API key or wgpt installation.
+直接在 GitHub 观看，无需安装、账号或部署。这些 GIF 录制自现有的**离线 HTML 模拟页面**，使用合成数据及其 **Next step（下一步）** 控件。各帧停留时间经过调整，方便阅读；场景不运行 wgpt 服务、不调用 AI provider，也不执行客户端工具。
 
-看看可恢复 bridge 如何让任务继续：将一段回复转换为两种客户端协议、中断后恢复原请求而不重复提交，以及传递工具调用并将执行留在客户端。[交互实验室](demos/README.md)在本地浏览器打开，无需账号、API key 或安装 wgpt。
+**Reconnect, don't resubmit.** Follow one simulated request through interruption and recovery; its submission counter stays at **1**.
 
-These are independently authored **offline, synthetic illustrations**, not live provider recordings, product screenshots or a running wgpt service. The demo makes no provider requests and executes no tools. It demonstrates design ideas, not current website compatibility or provider authorization. [Scope, sources and walkthroughs](demos/README.md#scope-and-sources) explain the boundary.
+**恢复连接，避免重复提交。** 观察同一模拟请求中断后恢复；提交计数始终保持为 **1**。
 
-这些是独立编写的**离线合成示意**，不是实站 provider 录像、产品截图或运行中的 wgpt 服务。演示不向 provider 发请求，也不执行工具；它展示设计理念，不能证明当前网站兼容性或 provider 授权。[范围、依据与说明](demos/README.md#scope-and-sources)解释了具体边界。
+![Offline simulation: the same request resumes while simulated submissions stay at one. / 离线模拟：恢复同一请求，模拟提交计数保持为一。](demos/recordings/recovery.gif)
+
+[Open recovery animation / 单独打开恢复动画](demos/recordings/recovery.gif)
+
+<details>
+<summary>One reply, two protocols / 一段回复，两种协议</summary>
+
+The same scripted reply appears in two illustrative client stream events.
+
+同一段预设回复出现在两种示意客户端流事件中。
+
+![Offline simulation: one reply becomes two protocol events. / 离线模拟：同一回复转换为两种协议事件。](demos/recordings/protocol.gif)
+
+[Open protocol animation / 单独打开协议动画](demos/recordings/protocol.gif)
+
+</details>
+
+<details>
+<summary>The client owns execution / 执行由客户端掌握</summary>
+
+A synthetic tool call receives a scripted client approval and a matching result; no tool executes.
+
+合成工具调用经过预设客户端批准，再接收匹配的结果；没有实际执行工具。
+
+![Offline simulation: client approval precedes a correlated scripted tool result. / 离线模拟：客户端批准后接收关联的预设工具结果。](demos/recordings/tools.gif)
+
+[Open tool animation / 单独打开工具动画](demos/recordings/tools.gif)
+
+</details>
+
+GIFs may animate automatically and play once without looping. For reduced-motion viewing, use the [static overview](demos/overview.svg); the [demo guide](demos/README.md) also provides written walkthroughs and an optional interactive version. These are recordings of synthetic teaching scenarios, not live product/provider footage, compatibility evidence or provider authorization. See [scope and sources](demos/README.md#scope-and-sources).
+
+GIF 可能自动播放，播放一次后停止，不循环。需要减少动态内容时，可查看[静态概览](demos/overview.svg)；[演示指南](demos/README.md)还提供文字说明及可选交互版本。这些录像记录的是合成教学场景，并非产品／provider 实站录像，也不能证明兼容性或 provider 授权。详见[范围与依据](demos/README.md#scope-and-sources)。
 
 ## Join the project / 参与项目
 

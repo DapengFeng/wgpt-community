@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "provider_calls": 0,
+  "renderer": "WebKitGTK",
+  "width": 1120,
+  "height": 1000,
+  "sources": {
+    "index.html": "acb629c9501db0b9d1348fbc47f75e6e26ab58efe803508e08023edb2afda5de",
+    "style.css": "7f01562d2204e45c51b9f7022a771aead6bdd7c4f70f94e5ffe4668ee9303efc",
+    "demo.js": "beb15e629007fc75864036d5a151b5076d16ee22fd5f29a6db0abb38f5ecbdc3"
+  },
+  "recorder_sha256": "e6daace9d377b33323fff206398cd834ad553f77bd81785c6e642dc89c21782d",
+  "recordings": [
+    {
+      "file": "protocol.gif",
+      "sha256": "32fe2d5bfa3ada00a319d3eb158bb4c3c863b500d0eb334c39a7c7678c24cb53",
+      "frames": 5,
+      "duration_ms": 19000,
+      "states": [
+        {
+          "state": "idle",
+          "submissions": 0
+        },
+        {
+          "state": "accepted",
+          "submissions": 0
+        },
+        {
+          "state": "submitted",
+          "submissions": 1
+        },
+        {
+          "state": "streaming",
+          "submissions": 1
+        },
+        {
+          "state": "completed",
+          "submissions": 1
+        }
+      ]
+    },
+    {
+      "file": "recovery.gif",
+      "sha256": "8b6f4b6a345e609f922ebe7f230b3cc4923e722464051b2aeffb99a0dd383ffa",
+      "frames": 6,
+      "duration_ms": 19500,
+      "states": [
+        {
+          "state": "idle",
+          "submissions": 0
+        },
+        {
+          "state": "accepted",
+          "submissions": 0
+        },
+        {
+          "state": "submitted",
+          "submissions": 1
+        },
+        {
+          "state": "retained",
+          "submissions": 1
+        },
+        {
+          "state": "receiving",
+          "submissions": 1
+        },
+        {
+          "state": "completed",
+          "submissions": 1
+        }
+      ]
+    },
+    {
+      "file": "tools.gif",
+      "sha256": "cfe42c69b2c904c9edcadca5bcf933a9dd6e1ba901c9d455b5947eaccc0c48bb",
+      "frames": 6,
+      "duration_ms": 19500,
+      "states": [
+        {
+          "state": "idle",
+          "submissions": 0
+        },
+        {
+          "state": "accepted",
+          "submissions": 0
+        },
+        {
+          "state": "awaiting_tool",
+          "submissions": 1
+        },
+        {
+          "state": "awaiting_approval",
+          "submissions": 1
+        },
+        {
+          "state": "tool_result",
+          "submissions": 1
+        },
+        {
+          "state": "completed",
+          "submissions": 2
+        }
+      ]
+    }
+  ]
+}

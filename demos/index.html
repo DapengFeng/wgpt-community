@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>wgpt — Continuity lab / 连续性实验室</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="demo.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="https://github.com/DapengFeng/wgpt-community">wgpt<span> / community</span></a>
+    <span class="offline">OFFLINE · SYNTHETIC <span lang="zh-CN">离线 · 合成演示</span></span>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">THE CONTINUITY LAB <span lang="zh-CN">连续性实验室</span></p>
+        <h1 id="title">Keep the work.<br>Recover the connection.</h1>
+        <p class="subtitle" lang="zh-CN">让工作留下来，让连接接得上。</p>
+        <p class="lede">Explore the ideas behind a recoverable AI bridge in three small, interactive stories.</p>
+        <p class="translation" lang="zh-CN">通过三个可交互的小故事，了解可恢复 AI bridge 的设计。</p>
+      </div>
+      <aside class="scope">
+        <span class="section-number">00 / THE BOUNDARY <span lang="zh-CN">演示边界</span></span>
+        <p>Scripted examples run entirely in this page. No model is called. No tool is executed.</p>
+        <p lang="zh-CN">预设示例完全在本页运行，不调用模型，不执行工具。</p>
+        <p class="muted">An independent illustration, not the wgpt runtime, a provider recording, or a compatibility test.</p>
+        <p class="muted" lang="zh-CN">独立设计示意，并非 wgpt 运行时、provider 录屏或兼容性测试。</p>
+      </aside>
+    </section>
+
+    <section class="lab" aria-labelledby="lab-title">
+      <div class="section-heading">
+        <h2 id="lab-title">One idea. Three perspectives. <span lang="zh-CN">一个理念，三种视角。</span></h2>
+        <span class="small">01—03 / INTERACTIVE <span lang="zh-CN">交互演示</span></span>
+      </div>
+      <div class="scenarios" role="group" aria-label="Choose a scenario / 选择演示">
+        <button type="button" data-scenario="protocol" aria-pressed="true"><span>01</span><strong>Translate a reply<small lang="zh-CN">转换回复协议</small></strong></button>
+        <button type="button" data-scenario="recovery" aria-pressed="false"><span>02</span><strong>Reconnect, don't resubmit<small lang="zh-CN">恢复连接，避免重复提交</small></strong></button>
+        <button type="button" data-scenario="tools" aria-pressed="false"><span>03</span><strong>Keep tools with the client<small lang="zh-CN">工具执行留在客户端</small></strong></button>
+      </div>
+
+      <div class="workbench">
+        <div class="story">
+          <p class="eyebrow">THE REQUEST <span lang="zh-CN">演示请求</span></p>
+          <h3 id="scenario-title"></h3>
+          <p id="scenario-title-zh" class="translation" lang="zh-CN"></p>
+          <p id="scenario-description"></p>
+          <p id="scenario-translation" class="translation" lang="zh-CN"></p>
+          <ol id="timeline" class="timeline"></ol>
+        </div>
+        <div class="inspector">
+          <div class="inspector-heading"><span>EVENT INSPECTOR <span lang="zh-CN">事件观察</span></span><span class="simulated">SIMULATED <span lang="zh-CN">模拟</span></span></div>
+          <div class="metrics">
+            <div><span>Submissions <span lang="zh-CN">模拟提交</span></span><strong id="submissions">0</strong></div>
+            <div><span>Request <span lang="zh-CN">请求标识</span></span><strong id="request-id">—</strong></div>
+            <div><span>State <span lang="zh-CN">状态</span></span><strong id="state">idle</strong></div>
+          </div>
+          <pre id="event-output" tabindex="0" aria-label="Illustrative event data / 示意事件数据"></pre>
+          <p class="inspector-note">Simplified, authored data. Not a complete API implementation.</p>
+          <p class="inspector-note" lang="zh-CN">预设的简化数据，不是完整 API 实现。</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="control-buttons">
+          <button type="button" id="play" class="primary">Play / 播放</button>
+          <button type="button" id="next">Next step / 下一步</button>
+          <button type="button" id="reset">Reset / 重置</button>
+        </div>
+        <p id="progress" role="status" aria-live="polite" aria-atomic="true">Ready / 就绪</p>
+      </div>
+      <noscript><p>Enable JavaScript to play these local scenarios; the <a href="README.md">written walkthrough</a> works without it.</p><p lang="zh-CN">启用 JavaScript 可播放本地演示；也可直接阅读无需脚本的<a href="README.md">文字说明</a>。</p></noscript>
+    </section>
+
+    <section class="invitation">
+      <div><p class="eyebrow">HELP MAKE IT DEPENDABLE <span lang="zh-CN">一起让它更可靠</span></p>
+        <h2>Good recovery needs good contributors.</h2>
+        <p lang="zh-CN">可靠的恢复，需要认真打磨它的人。</p>
+        <p class="muted">Bring a failure case, improve a protocol test, or make diagnostics clearer.</p>
+        <p class="muted" lang="zh-CN">带来一个失败用例，完善协议测试，或让诊断更清楚。</p></div>
+      <a class="join" href="https://github.com/DapengFeng/wgpt-community/blob/main/CONTRIBUTING.md">Join the project / 参与项目</a>
+    </section>
+  </main>
+  <footer>
+    <p>Independent project. These offline examples do not establish permission to automate any provider's website. <a href="https://github.com/DapengFeng/wgpt-community/blob/main/demos/README.md#scope-and-sources">Scope and sources</a>.</p>
+    <p lang="zh-CN">独立项目。这些离线示例不能证明已获得任何 provider 的网页自动化许可。<a href="https://github.com/DapengFeng/wgpt-community/blob/main/demos/README.md#scope-and-sources">范围与依据</a>。</p>
+  </footer>
+</body>
+</html>

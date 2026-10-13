@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title description">
+  <title id="title">wgpt continuity lab — offline synthetic demo / 离线合成演示</title>
+  <desc id="description">Original illustration of translating replies, retaining one interrupted request and client-owned tools. No provider connection or real product screenshot. 原创示意：转换回复、保留中断请求及客户端工具执行，不连接 provider，并非产品截图。</desc>
+  <rect width="1200" height="560" rx="18" fill="#f4f5ed"/>
+  <g font-family="system-ui, sans-serif" fill="#152d34">
+    <text x="48" y="57" font-size="30" font-weight="750">wgpt <tspan font-size="15" font-weight="400" fill="#52696c">/ community</tspan></text>
+    <rect x="865" y="28" width="287" height="57" rx="6" fill="#c8f395"/>
+    <text x="883" y="51" font-size="12" font-weight="650" letter-spacing="1">OFFLINE · SYNTHETIC SCENARIOS</text>
+    <text x="883" y="72" font-size="13">离线 · 合成场景 · 非产品截图</text>
+    <path d="M48 107H1152" stroke="#d6ddd4"/>
+    <text x="48" y="168" font-size="17" fill="#52696c" letter-spacing="2">THE CONTINUITY LAB / 连续性实验室</text>
+    <text x="48" y="223" font-size="43" font-weight="650" letter-spacing="-1.3">Keep the work. Recover the connection.</text>
+    <text x="48" y="263" font-size="23" fill="#52696c">让工作留下来，让连接接得上。</text>
+    <rect x="48" y="310" width="350" height="167" rx="8" fill="#122d34"/>
+    <rect x="425" y="310" width="350" height="167" rx="8" fill="#122d34"/>
+    <rect x="802" y="310" width="350" height="167" rx="8" fill="#122d34"/>
+    <g fill="#c8f395" font-size="13" font-family="ui-monospace, monospace">
+      <text x="70" y="344">01 / PROTOCOLS</text><text x="447" y="344">02 / RECOVERY</text><text x="824" y="344">03 / OWNERSHIP</text>
+    </g>
+    <g fill="#f4f5ed" font-size="21" font-weight="600">
+      <text x="70" y="383">One reply. Two protocols.</text><text x="447" y="383">Reconnect. Submit once.</text><text x="824" y="383">Tools stay with the client.</text>
+    </g>
+    <g fill="#bbcecd" font-size="16">
+      <text x="70" y="414">一段回复，两种协议。</text><text x="447" y="414">恢复连接，仅提交一次。</text><text x="824" y="414">工具由客户端执行。</text>
+    </g>
+    <g fill="#c8f395" font-size="12" font-family="ui-monospace, monospace">
+      <text x="70" y="451">authored text / 预设文本</text><text x="447" y="451">same request_id / 同一请求</text><text x="824" y="451">scripted result / 预设结果</text>
+    </g>
+    <text x="48" y="518" font-size="14" fill="#52696c">Three interactive stories. No account, model call or executed tool.</text>
+    <text x="48" y="543" font-size="14" fill="#52696c">三个交互故事。无需账号，不调用模型，不执行工具。</text>
+  </g>
+</svg>

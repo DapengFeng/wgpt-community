@@ -1,8 +1,8 @@
 # Contributing to wgpt / 参与 wgpt
 
-This document owns contributor onboarding and the operation of the public CLA/invitation automation. The private wgpt repository owns product development, review, tests and releases. Public and private repositories do not synchronize source code or issues.
+This document owns contributor onboarding and the operation of the public CLA/invitation automation. The [demo guide](demos/README.md) owns independently authored public illustrations and their offline boundary. The private wgpt repository owns product development, review, tests and releases. Public and private repositories do not synchronize source code or issues.
 
-本文统一说明贡献者接入以及公开 CLA/邀请自动化的运维。私有 wgpt 仓库负责产品开发、审阅、测试和发布。公开与私有仓库不进行源码或 issue 同步。
+本文统一说明贡献者接入以及公开 CLA/邀请自动化的运维。[演示指南](demos/README.md)负责独立编写的公开示意及其离线边界。私有 wgpt 仓库负责产品开发、审阅、测试和发布。公开与私有仓库不进行源码或 issue 同步。
 
 ## Request access / 申请接入
 

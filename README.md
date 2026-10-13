@@ -1,12 +1,24 @@
 # wgpt community
 
-**The public entry point for contributing to wgpt.** This repository hosts the contribution agreement, contributor onboarding and their automation. Development of wgpt takes place in the private [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) repository after an invitation is accepted.
+**Explore the ideas. Help make them dependable.** This repository hosts offline demonstrations, the contribution agreement and contributor onboarding. Development of wgpt takes place in the private [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) repository after an invitation is accepted.
 
-**wgpt 的公开贡献入口。** 本仓库维护贡献者协议、贡献者接入及其自动化。接受邀请后，在私有仓库 [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) 中开发 wgpt。
+**探索设计，一起让它更可靠。** 本仓库提供离线演示、贡献者协议及接入流程。接受邀请后，在私有仓库 [DapengFeng/wgpt](https://github.com/DapengFeng/wgpt) 中开发 wgpt。
 
 wgpt's mission is to make website-based AI a dependable collaborator for coding agents and SDK applications through a local, recoverable bridge. This public repository does not mirror its private source, releases, issues, account data or client transcripts. Do not copy private repository contents into a public issue, pull request or fork.
 
 wgpt 的使命是通过可恢复的本地 bridge，让网页端 AI 成为编程 agent 和 SDK 应用可靠的协作者。本公开仓库不镜像私有源码、发布产物、issue、账号数据或客户端会话。不要将私有仓库内容复制到公开 issue、PR 或 fork。
+
+## Try the continuity lab / 体验连续性实验室
+
+[![Offline synthetic scenarios: protocols, recovery and client-owned tools / 离线合成场景：协议、恢复与客户端工具](demos/overview.svg)](demos/README.md)
+
+See how a recoverable bridge can keep a task moving: translate one reply into two client protocols, recover an interrupted request without a second submission, and carry a tool call while keeping execution with the client. The [interactive lab](demos/README.md) opens locally in your browser and needs no account, API key or wgpt installation.
+
+看看可恢复 bridge 如何让任务继续：将一段回复转换为两种客户端协议、中断后恢复原请求而不重复提交，以及传递工具调用并将执行留在客户端。[交互实验室](demos/README.md)在本地浏览器打开，无需账号、API key 或安装 wgpt。
+
+These are independently authored **offline, synthetic illustrations**, not live provider recordings, product screenshots or a running wgpt service. The demo makes no provider requests and executes no tools. It demonstrates design ideas, not current website compatibility or provider authorization. [Scope, sources and walkthroughs](demos/README.md#scope-and-sources) explain the boundary.
+
+这些是独立编写的**离线合成示意**，不是实站 provider 录像、产品截图或运行中的 wgpt 服务。演示不向 provider 发请求，也不执行工具；它展示设计理念，不能证明当前网站兼容性或 provider 授权。[范围、依据与说明](demos/README.md#scope-and-sources)解释了具体边界。
 
 ## Join the project / 参与项目
 
@@ -38,9 +50,9 @@ Signatures are recorded on the [`cla-signatures` branch](https://github.com/Dape
 
 ## Development and verification / 开发与验证
 
-This repository's automation uses Python's standard library. Run its offline synthetic tests from this repository root:
+The CLA and invitation automation uses Python's standard library; demo regression tests also use Node.js 18 or newer and its built-in test runner. Run the offline synthetic tests from this repository root:
 
-本仓库自动化使用 Python 标准库。在本仓库根目录执行离线合成测试：
+CLA 和邀请自动化使用 Python 标准库；演示回归测试还使用 Node.js 18 或更新版本及其内置测试运行器。在本仓库根目录执行离线合成测试：
 
 ```bash
 python3 -m unittest discover -s tests
